@@ -4,14 +4,13 @@ var mongoose = require('mongoose');
 //Define a schema
 var Schema = mongoose.Schema;
 
-var catalogueSchema = new Schema({
+var categorySchema = new Schema({
   name: { type: String, required: true },
-  description: { type: String, required: true },
-  url: {type: String}
+  description: { type: String, required: true }
 });
 
 // Virtual for this book instance URL.
-itemSchema
+categorySchema
 .virtual('url')
 .get(function () {
   return '/catalog/book/'+this._id;
