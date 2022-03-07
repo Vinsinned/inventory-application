@@ -9,6 +9,7 @@ exports.items_list = function(req, res, next) {
 // Display list of all items
 Item.find()
     .sort([['name', 'ascending']])
+    .populate('category')
     .exec(function (err, all_items) {
         if (err) { return next(err); }
         // Successful, so render.

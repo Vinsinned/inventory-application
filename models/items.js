@@ -16,7 +16,7 @@ var itemSchema = new Schema({
 itemSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/book/'+this._id;
+  return '/item/'+this._id;
 });
 
 // Export model.

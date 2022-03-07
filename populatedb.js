@@ -30,7 +30,7 @@ function itemsCreate(item_name, item_description, item_category, item_price, ite
     itemdetail = {
         name: item_name,
         description: item_description,
-        category: item_category,
+        category: item_category._id,
         price: item_price,
         quantity: item_quantity
     }
@@ -159,7 +159,7 @@ function(err, results) {
         console.log('FINAL ERR: '+err);
     }
     else {
-        console.log('BOOKInstances: '+'IDK WHAT THIS DOES');
+        console.log('All is well.');
         
     }
     // All done, disconnect from database

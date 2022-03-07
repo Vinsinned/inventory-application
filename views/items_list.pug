@@ -2,5 +2,14 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}, I am Vinson He
-  
+  div.grid
+    each item in items 
+      div.g-col-4
+      h3
+        a(href=item.url) #{item.name}
+      h5
+        a(href=item.category) #{item.category.name}
+      p= item.description
+      p= item.price
+      p= item.quantity
+      hr
