@@ -2,13 +2,19 @@ extends layout
 
 block content
   h1= title
+
+  hr
+  h6 
+    a(href='/category') Categories
+  hr
+
   div.grid
     each item in items 
       div.g-col-4
       h3
         a(href=item.url) #{item.name}
       h5
-        a(href=item.category) #{item.category.name}
+        a(href=item.category.url) #{item.category.name}
       p= item.description
       p= item.price
       p= item.quantity

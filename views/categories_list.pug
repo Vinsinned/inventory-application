@@ -6,7 +6,12 @@ block content
   ul 
     each category in categories     
       li
-        a(href=category.url) #{category.name}
+        h3
+          a(href=category.url) #{category.name}
         p= category.description
     else 
       li No categories found :(
+    li 
+      hr
+      a(href='/') Items
+      hr

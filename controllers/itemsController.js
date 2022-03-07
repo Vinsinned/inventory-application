@@ -22,10 +22,12 @@ Item.find()
 exports.item_detail = function(req, res, next) {
 
     Item.findById(req.params.id)
+    .populate('category')
     .exec(function (err, item_info) {
         if (err) { return next(err); }
         // Successful, so render.
-        res.render('item_detail', { title: 'Items Do This Later', item: item_info});
+        console.log(item_info.name)
+        res.render('item_detail', { title: item_info.name, item: item_info});
     });
 
 };

@@ -3,6 +3,7 @@ var Category = require('../models/category');
 var async = require('async');
 
 const { body, validationResult } = require("express-validator");
+const items = require('../models/items');
 
 exports.categories_list = function(req, res, next) {
 
@@ -22,13 +23,12 @@ exports.category_detail = function(req, res, next) {
 
 	async.parallel({
 		category: function(callback) {
-
 			Category.findById(req.params.id)
 				.exec(callback);
 		},
 
 		category_items: function(callback) {
-			Item.find({ 'Category': req.params.id })
+			Item.find({ 'category': req.params.id })
 			.exec(callback);
 		},
 
@@ -40,7 +40,7 @@ exports.category_detail = function(req, res, next) {
 			return next(err);
 		}
 		// Successful, so render.
-		res.render('category_detail', { title: 'Category Items', items: results.category, category_items: results.category_items } );
+		res.render('category_detail', { title: results.category.name, items: results.category, category_items: results.category_items } );
 	});
 
 };

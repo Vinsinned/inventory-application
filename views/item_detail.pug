@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  h5
+    a(href=item.category.url) #{item.category.name}
+  p= item.description
+  p= item.price
+  p= item.quantity 
+
+  h6
+    a(href='/') Go back
+  
