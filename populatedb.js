@@ -64,7 +64,7 @@ function categoryCreate(category, description, cb) {
 }
 
 function createCategories(cb) {
-    async.parallel([
+    async.series([
         function(callback) {
           categoryCreate('Books', 'For the intellectuals', callback);
         },
@@ -110,17 +110,17 @@ function createItems(cb) {
                 categories[0], 16.89, 10000000, callback);
         },
         function(callback) {
-          itemsCreate('Monopoly', 'The board game that never ends!', categories[5], 19.99, 100000000, callback);
+          itemsCreate('Monopoly', 'The board game that never ends!', categories[6], 19.99, 100000000, callback);
         },
         function(callback) {
           itemsCreate('DIOR Savauge', 'The greatest cologne in history.', categories[2], 104.40, 100, callback);
         },
         function(callback) {
-            itemsCreate('Godiva Chocolate Assortment', 'Fancy chocolates best for dates and hookups', categories[6],
+            itemsCreate('Godiva Chocolate Assortment', 'Fancy chocolates best for dates and hookups', categories[4],
                 23.99, 192, callback);
         },
         function(callback) {
-            itemsCreate('U.S. Authentic MRE', 'Great camping equipment or for U.S. miltary enthusiasts', categories[6],
+            itemsCreate('U.S. Authentic MRE', 'Great camping equipment or for U.S. miltary enthusiasts', categories[4],
                 16.89, 10000, callback);
         },
         function(callback) {
@@ -136,11 +136,11 @@ function createItems(cb) {
                 210.00, 25000000, callback);
         },
         function(callback) {
-            itemsCreate('Dungeons & Dragons 5th Edition RPG: Starter Set', 'The beginning to your one true board game', categories[6],
+            itemsCreate('Dungeons & Dragons 5th Edition RPG: Starter Set', 'The beginning to your one true board game', categories[0],
                 210.00, 25000000, callback);
         },
         function(callback) {
-            itemsCreate('Bluefin Tuna', 'The real deal', categories[5],
+            itemsCreate('Bluefin Tuna', 'The real deal', categories[4],
                 3100000, 1, callback);
         },
         ],

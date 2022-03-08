@@ -44,3 +44,46 @@ exports.category_detail = function(req, res, next) {
 	});
 
 };
+
+exports.category_create_get = function (req, res, next) {
+    res.render('category_form', { title: 'Create Category' });
+};
+
+exports.create_post_get = [
+
+    // Validate and sanitize fields.
+    body('name').trim().isLength({ min: 1 }).escape().withMessage('Category name must be specified.')
+		.isAlphanumeric().withMessage('Category name has non-alphanumeric characters.'),
+		body('description').trim().isLength({ min: 1 }).escape().withMessage('Category name must be specified.'),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+        
+        // Create Author object with escaped and trimmed data
+        var category = new Category(
+            {
+                name: req.body.name,
+								description: req.body.description
+					}
+				);
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            res.render('category_form', { title: 'Create Category', category: category, errors: errors.array() });
+            return;
+        }
+        else {
+            // Data from form is valid.
+
+            // Save author.
+            category.save(function (err) {
+                if (err) { return next(err); }
+                // Successful - redirect to new author record.
+                res.redirect(category.url);
+            });
+        }
+    }
+];
