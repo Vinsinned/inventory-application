@@ -107,3 +107,100 @@ exports.item_create_post = [
         }
     }
 ];
+
+// Display item update form on GET.
+exports.item_update_get = function(req, res, next) {
+
+    // Get book, authors and genres for form.
+    async.parallel({
+        item: function(callback) {
+            Item.findById(req.params.id).populate('category').exec(callback);
+        },
+        categories: function(callback) {
+            Category.find(callback);
+        },
+        }, function(err, results) {
+            if (err) { return next(err); }
+            if (results.item==null) { // No results.
+                var err = new Error('Item not found');
+                err.status = 404;
+                return next(err);
+            }
+            // Success.
+            // Mark our selected categories as checked.
+            for (var all_c_iter = 0; all_c_iter < results.categories.length; all_c_iter++) {
+                for (var book_c_iter = 0; book_c_iter < results.item.category.length; book_c_iter++) {
+                    if (results.categories[all_c_iter]._id.toString()===results.item.category[book_c_iter]._id.toString()) {
+                        results.categories[all_c_iter].checked='true';
+                    }
+                }
+            }
+            res.render('item_form', { title: 'Update Item', categories:results.categories, item: results.item });
+        });
+
+};
+
+// Handle item update on POST.
+exports.item_update_post = [
+
+    // Convert the genre to an array.
+    (req, res, next) => {
+        if(!(req.body.category instanceof Array)){
+            if(typeof req.body.category==='undefined')
+            req.body.category=[];
+            else
+            req.body.category=new Array(req.body.category);
+        }
+        next();
+    },
+   
+    // Validate and santitize fields.
+    body('name', 'Name must not be empty.').trim().isLength({ min: 1 }).escape(),
+    body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
+    body('price', 'Price must not be empty.').trim().escape(),
+    body('quantity', 'Quantity must not be empty').trim().escape(),
+    body('category.*').escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Item object with escaped/trimmed data and old id.
+        var item = new Item(
+          { name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            category: req.body.category,
+            _id:req.params.id // This is required, or a new ID will be assigned!
+           });
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+
+            Category.find()
+                .sort([['name', 'ascending']])
+                .exec(function (err, results) {
+                    if (err) { return next(err); }
+                    // Mark our selected genres as checked.
+                    for (let i = 0; i < results.category.length; i++) {
+                        if (item.category.indexOf(results.category[i]._id) > -1) {
+                            results.category[i].checked='true';
+                        }
+                    }
+                    res.render('item_form', { title: 'Create Item', category:results.category, item: item, errors: errors.array() });
+            });
+            return;
+        }
+        else {
+            // Data from form is valid. Update the record.
+            Item.findByIdAndUpdate(req.params.id, item, {}, function (err,item) {
+                if (err) { return next(err); }
+                   // Successful - redirect to book detail page.
+                   res.redirect(item.url);
+                });
+        }
+    }
+];
