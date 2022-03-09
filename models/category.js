@@ -9,7 +9,7 @@ var categorySchema = new Schema({
   description: { type: String, required: true }
 });
 
-// Virtual for this book instance URL.
+// Virtual for this category instance URL.
 categorySchema
 .virtual('url')
 .get(function () {

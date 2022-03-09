@@ -9,12 +9,12 @@ exports.categories_list = function(req, res, next) {
 
 	// Display list of all items
 	Category.find()
-	.sort([['name', 'ascending']])
-	.exec(function (err, all_categories) {
-		if (err) { return next(err); }
-		// Successful, so render.
-		res.render('categories_list', { title: 'Categories List', categories:  all_categories});
-	});
+		.sort([['name', 'ascending']])
+		.exec(function (err, all_categories) {
+			if (err) { return next(err); }
+			// Successful, so render.
+			res.render('categories_list', { title: 'Categories List', categories:  all_categories});
+		});
 
 };
 
