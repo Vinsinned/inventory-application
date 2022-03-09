@@ -141,3 +141,57 @@ exports.category_update_post = [
         }
     }
 ];
+
+// Display Category delete form on GET.
+exports.category_delete_get = function (req, res, next) {
+
+	async.parallel({
+		category: function (callback) {
+			Category.findById(req.params.id).exec(callback);
+		},
+		items: function (callback) {
+			Item.find({ 'category': req.params.id }).exec(callback);
+		},
+	}, function (err, results) {
+		 	if (err) { return next(err); }
+			if (results.category==null) { // No results.
+					res.redirect('/catalog/genres');
+			}
+			// Successful, so render.
+		res.render('category_delete', { title: 'Delete Category', category: results.category, items: results.items } );
+	});
+
+};
+
+// Handle book delete on POST.
+exports.category_delete_post = function(req, res, next) {
+
+    // Assume the post has valid id (ie no validation/sanitization).
+	
+		async.parallel({
+        category: function(callback) {
+            Category.findById(req.params.id).exec(callback);
+        },
+        items: function(callback) {
+            Item.find({ 'category': req.params.id }).exec(callback);
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        // Success
+        if (results.items.length > 0) {
+            // Genre has books. Render in same way as for GET route.
+            res.render('category_delete', { title: 'Delete Genre', category: results.category, items: results.items } );
+            return;
+        }
+        else {
+            // Genre has no books. Delete object and redirect to the list of genres.
+            Category.findByIdAndRemove(req.body.id, function deleteCategory(err) {
+                if (err) { return next(err); }
+                // Success - go to genres list.
+                res.redirect('/category');
+            });
+
+        }
+    });
+
+};

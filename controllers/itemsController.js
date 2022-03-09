@@ -204,3 +204,41 @@ exports.item_update_post = [
         }
     }
 ];
+
+
+// Display item delete form on GET.
+exports.item_delete_get = function (req, res, next) {
+    
+    Item.findById(req.params.id)
+        .populate('category')
+        .exec(function (err, results) {
+            if (err) { return next(err); }
+            console.log('a')
+            if (results == null) { // No results.
+                res.redirect('/items');
+            }
+            // Successful, so render.
+            res.render('item_delete', { title: 'Delete Book', item: results });
+        });
+};
+
+// Handle item delete on POST.
+exports.item_delete_post = function(req, res, next) {
+
+    // Assume the post has valid id (ie no validation/sanitization).
+
+    Item.findById(req.params.id)
+        .populate('category')
+        .exec(function(err, results) {
+            if (err) { return next(err); }
+            else {
+                Item.findByIdAndRemove(req.body.id, function deleteItem(err) {
+                    if (err) { return next(err); }
+                    // Success - got to books list.
+                    res.redirect('/item');
+                });
+
+        }
+    });
+
+};

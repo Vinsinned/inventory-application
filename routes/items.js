@@ -19,6 +19,12 @@ router.get('/:id/update', item_controller.item_update_get);
 // POST request for creating Item.
 router.post('/:id/update', item_controller.item_update_post);
 
+// GET request for deleting category.
+router.get('/:id/delete', item_controller.item_delete_get);
+
+// POST request for deleting category.
+router.post('/:id/delete', item_controller.item_delete_post);
+
 /* GET list page. */
 router.get('/:id', item_controller.item_detail);
 
